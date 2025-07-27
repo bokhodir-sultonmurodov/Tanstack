@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React  from "react";
 import { useComment } from "../api/hooks/useComment";
 
 const Blog = () => {
-  const { getComments, DelMutation, EditMutation } = useComment();
+  const { getComments, DelMutation } = useComment();
   // const [dataa, setData] = useState(null);
   const { data } = getComments();
   console.log(data?.data);
