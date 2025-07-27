@@ -1,6 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "..";
 
+type BlogUser = {
+  id?: number;
+  fname: string;
+  lname: string;
+  birthdate: string;
+  phone_number: string;
+};
+
 export const key = "comment";
 
 export const useComment = () => {
@@ -8,19 +16,22 @@ export const useComment = () => {
 
   const getComments = () =>
     useQuery({ queryKey: ["blog"], queryFn: () => api.get("/blog") });
-  
-   const DelMutation = useMutation({
-        mutationFn: (id) => api.delete(`/blog/${id}`),
-        onSuccess: () => client.invalidateQueries({ queryKey: ["blog"] })
-    })
-  const CreateMutation = useMutation({
-        mutationFn: (newUser) => api.post("/blog", newUser),
-        onSuccess: () => client.invalidateQueries({ queryKey: ["blog"] })
-    })
-     const EditMutation = useMutation({
-        mutationFn:(updatedUser)=>api.put(`/users/${updatedUser.id}`,updatedUser),
-        onSuccess: () => client.invalidateQueries({ queryKey: ["users"] })
-    })
 
-  return { getComments, CreateMutation,DelMutation,EditMutation };
+  const DelMutation = useMutation({
+    mutationFn: (id: number) => api.delete(`/blog/${id}`),
+    onSuccess: () => client.invalidateQueries({ queryKey: ["blog"] }),
+  });
+
+  const CreateMutation = useMutation({
+    mutationFn: (newUser: BlogUser) => api.post("/blog", newUser),
+    onSuccess: () => client.invalidateQueries({ queryKey: ["blog"] }),
+  });
+
+  const EditMutation = useMutation({
+    mutationFn: (updatedUser: BlogUser) =>
+      api.put(`/users/${updatedUser.id}`, updatedUser),
+    onSuccess: () => client.invalidateQueries({ queryKey: ["users"] }),
+  });
+
+  return { getComments, CreateMutation, DelMutation, EditMutation };
 };
