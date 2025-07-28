@@ -28,9 +28,9 @@ export const useComment = () => {
   });
 
   const EditMutation = useMutation({
-    mutationFn: (updatedUser: BlogUser) =>
-      api.put(`/users/${updatedUser.id}`, updatedUser),
-    onSuccess: () => client.invalidateQueries({ queryKey: ["users"] }),
+    mutationFn: ({ updatedUser,id }: { updatedUser: BlogUser,id:string }) =>
+      api.put(`/blog/${id}`, updatedUser),
+    onSuccess: () => client.invalidateQueries({ queryKey: ["blog"] }),
   });
 
   return { getComments, CreateMutation, DelMutation, EditMutation };

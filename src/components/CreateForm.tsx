@@ -1,17 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useComment } from "../api/hooks/useComment";
 
-const CreateForm = () => {
+const CreateForm = ({editingItem,setEditingItem}:{editingItem:any,setEditingItem:any}) => {
   const [fname, setFname] = useState("");
   const [lname, setLname] = useState("");
   const [birthdate, setBirthdate] = useState("");
   const [phone_number, setPhoneNumber] = useState("");
 
-  const { CreateMutation } = useComment();
-
+  const { CreateMutation,EditMutation } = useComment();
+  useEffect(()=>{
+    if(editingItem){
+      setFname(editingItem.fname)
+      setLname(editingItem.lname)
+      setBirthdate(editingItem.birthdate)
+      setPhoneNumber(editingItem.phone_number)
+    }
+  },[editingItem])
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    CreateMutation.mutate({ fname, lname, birthdate, phone_number });
+    const blog = {fname,lname,birthdate,phone_number}
+    if(editingItem){
+      EditMutation.mutate({updatedUser:blog,id:editingItem.id})
+      setEditingItem(null)
+    }else{
+      CreateMutation.mutate(blog);
+    }
     setFname("");
     setLname("");
     setBirthdate("");
@@ -51,6 +64,7 @@ const CreateForm = () => {
           onChange={(e) => setPhoneNumber(e.target.value)}
           className="border px-3 py-2 rounded-lg border-gray-300 text-sm"
           type="text"
+          placeholder="Phone number"
         />
         <button
           type="submit"

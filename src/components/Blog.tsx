@@ -1,7 +1,11 @@
-import React  from "react";
+import React, { type Dispatch, type FC }  from "react";
 import { useComment } from "../api/hooks/useComment";
 
-const Blog = () => {
+interface Props {
+  setEditingItem:Dispatch<any>
+}
+
+const Blog:FC<Props> = ({setEditingItem}) => {
   const { getComments, DelMutation } = useComment();
   // const [dataa, setData] = useState(null);
   const { data } = getComments();
@@ -33,6 +37,7 @@ const Blog = () => {
                     Delete
                   </button>
                   <button
+                  onClick={()=>setEditingItem(item)}
                     className="text-green-600 border border-green-400 hover:bg-green-50 rounded-md px-3 py-1 text-sm transition"
                   >
                     Update
